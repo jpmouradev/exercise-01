@@ -14,6 +14,13 @@ export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [newTaskTitle, setNewTaskTitle] = useState("")
 
+  useEffect(() => {
+    if (localStorage.getItem("localTasks")) {
+      const storedList = JSON.parse(localStorage.getItem("localTasks")!)
+      setTasks(storedList)
+    }
+  }, [])
+
   function handleCreateNewTask() {
     if (newTaskTitle.trim() == "") {
       setNewTaskTitle("")
@@ -29,6 +36,7 @@ export function TaskList() {
       }
       // localStorage.setItem(newTask.id.toString(), newTaskTitle)
       setTasks([...tasks, newTask])
+      localStorage.setItem("localTasks", JSON.stringify([...tasks, newTask]))
       setNewTaskTitle("")
     }
   }
@@ -51,6 +59,7 @@ export function TaskList() {
       return task.id !== id
     })
     setTasks(removeTask)
+    localStorage.setItem("localTasks", JSON.stringify(removeTask))
   }
 
   return (
